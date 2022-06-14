@@ -1,0 +1,102 @@
+version: '3'
+services:
+  registry-service:
+    image: microservice-docker-registry-service:0.0.1-SNAPSHOT
+    ports:
+      - 8761:8761
+    networks:
+      - safetech
+  config-service:
+    image: microservice-docker-config-service:0.0.1-SNAPSHOT
+    links:
+      - registry-service
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    depends_on:
+      - registry-service
+    ports:
+      - 8888:8888
+    networks:
+      - safetech
+  technical-service:
+    image: microservice-docker-technical-service:0.0.1-SNAPSHOT
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    restart: on-failure
+    depends_on:
+      - registry-service
+      - config-service
+    ports:
+      - 8081:8081
+    networks:
+      - safetech
+  user-service:
+    image: microservice-docker-user-service:0.0.1-SNAPSHOT
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    restart: on-failure
+    depends_on:
+      - registry-service
+      - config-service
+    ports:
+      - 8082:8082
+    networks:
+      - safetech
+  appointment-service:
+    image: microservice-docker-appointment-service:0.0.1-SNAPSHOT
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    restart: on-failure
+    depends_on:
+      - registry-service
+      - config-service
+    ports:
+      - 8083:8083
+    networks:
+      - safetech
+  publication-service:
+    image: microservice-docker-publication-service:0.0.1-SNAPSHOT
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    restart: on-failure
+    depends_on:
+      - registry-service
+      - config-service
+    ports:
+        - 8084:8084
+    networks:
+      - safetech
+  admin-service:
+    image: microservice-docker-admin-service:0.0.1-SNAPSHOT
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    restart: on-failure
+    depends_on:
+      - registry-service
+      - config-service
+    ports:
+      - 8086:8086
+    networks:
+      - safetech
+  gateway-service:
+    image: microservice-docker-gateway-service:0.0.1-SNAPSHOT
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://registry-service:8761/eureka
+    ports:
+      - 8080:8080
+    depends_on:
+      - config-service
+      - registry-service
+    networks:
+      - safetech
+networks:
+  safetech:
+
+
