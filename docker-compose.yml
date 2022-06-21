@@ -68,7 +68,7 @@ services:
       - registry-service
       - config-service
     ports:
-        - 8084:8084
+      - 8084:8084
     networks:
       - safetech
   admin-service:
